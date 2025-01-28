@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGameLoop } from "@/hooks/useGameLoop";
 import { Dragon } from "@/lib/game/Dragon";
 import { GameState } from "@/lib/game/types";
+import { chapters } from "@/lib/data";
 
 interface GameCanvasProps {
   dragonType: string;
@@ -34,7 +35,7 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
     const drawBackground = () => {
       if (gameState.environment === "dragonpit") {
         ctx.fillStyle = "#3a3a3a"; // Cinza para ruínas
-      } else if (gameState.environment === "ancient-valyria") {
+      } else if (gameState.environment === "valyria") {
         ctx.fillStyle = "#FF6347"; // Vermelho para lava
       } else if (gameState.environment === "harrenhal") {
         ctx.fillStyle = "#1a1a1a"; // Preto para tempestade
@@ -53,7 +54,7 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
       requestAnimationFrame(gameLoop); // Loop do jogo
     };
 
-    requestAnimationFrame(gameLoop);
+    // requestAnimationFrame(gameLoop);
   }, [gameState]);
 
   return (
