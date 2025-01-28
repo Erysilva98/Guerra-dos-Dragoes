@@ -10,6 +10,7 @@ export function useGameLoop(
   setGameState: (state: GameState) => void
 ) {
   const frameRef = useRef<number>();
+  const currentBackgroundImage = useRef<HTMLImageElement | null>(null); 
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,19 +27,36 @@ export function useGameLoop(
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
+    const loadBackgroundImage = (imageUrl: string) => {
+      if (currentBackgroundImage.current && currentBackgroundImage.current.src === imageUrl) {
+        return; 
+      }
+      const image = new Image();
+      image.src = imageUrl;
+      image.onload = () => {
+        currentBackgroundImage.current = image;
+      };
+    };
+
     // Game loop
     const gameLoop = () => {
-      // Clear canvas with environment-specific background color
+      let imageUrl = "";
+
       if (gameState.environment === "dragonpit") {
-        ctx.fillStyle = "gray"; // Fundo cinza para ruínas
-      } else if (gameState.environment === "ancient-valyria") {
-        ctx.fillStyle = "red"; // Fundo avermelhado para lava
+        imageUrl = "/Arena/Dragonpit (Fosso dos Dragões).jpg";
+      } else if (gameState.environment === "valyria") {
+        imageUrl = "/Arena/Ancient Valyria (Valyria Antiga).jpg"; 
       } else if (gameState.environment === "harrenhal") {
-        ctx.fillStyle = "black"; // Fundo preto para tempestade
+        imageUrl = "/Arena/Harrenhal.jpg"; 
       } else {
-        ctx.fillStyle = "#1a1a1a"; // Cor padrão
+        imageUrl = "/Arena/default.jpg"; 
       }
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      loadBackgroundImage(imageUrl);
+
+      if (currentBackgroundImage.current) {
+        ctx.drawImage(currentBackgroundImage.current, 0, 0, canvas.width, canvas.height);
+      }
 
       // Update game state
       const newState = { ...gameState };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Flame, ChevronRight, ChevronLeft } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import CharacterCard from "@/components/CharacterCard";
@@ -13,14 +13,16 @@ import GameCanvas from "@/components/game/GameCanvas";
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
+  const [selectedDragonType, setSelectedDragonType] = useState<string | null>(null);
 
-  const handleNavigate = (section) => {
+  const handleNavigate = (section: SetStateAction<string>) => {
     setActiveSection(section);
   };
 
   const handlePlayChapter = (chapterId: string) => {
     setSelectedChapter(chapterId);
-    setActiveSection("game"); // Navega para a tela do jogo
+    setActiveSection("game"); 
+    setSelectedDragonType(chapterId);
   };
 
   return (
@@ -102,6 +104,10 @@ export default function Home() {
               ))}
             </div>
           </section>
+        )}
+
+        {activeSection === "game" && selectedDragonType && (
+          <GameCanvas dragonType={selectedDragonType} />
         )}
       </div>
     </main>
