@@ -1,13 +1,36 @@
 export class Dragon {
   x: number = 100;
   y: number = 300;
-  width: number = 100;
-  height: number = 60;
+  width: number = 120;
+  height: number = 80;
   speed: number = 5;
   type: string;
+  image: HTMLImageElement | null;
 
   constructor(type: string) {
     this.type = type;
+    this.image = null; 
+    this.loadImage(); 
+  }
+
+  loadImage() {
+    switch (this.type) {
+      case "dragonpit":
+        this.image = new Image();
+        this.image.src = "/Dragon/personagem-caraxes.png"; 
+        break;
+      case "valyria":
+        this.image = new Image();
+        this.image.src = "/Dragon/personagem-meleys.png";
+        break;
+      case "harrenhal":
+        this.image = new Image();
+        this.image.src = "/Dragon/personagem-vermithor.png";
+        break;
+      default:
+        this.image = null; 
+        break;
+    }
   }
 
   moveUp() {
@@ -19,11 +42,15 @@ export class Dragon {
   }
 
   shoot() {
-    // Will implement projectile creation
+    // Implementação do disparo de projétil (não alterado)
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = "#FFA500";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    if (this.image) {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    } else {
+      ctx.fillStyle = "#0000FF"; 
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
   }
 }
