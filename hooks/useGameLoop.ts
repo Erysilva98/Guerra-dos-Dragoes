@@ -10,7 +10,7 @@ export function useGameLoop(
   setGameState: (state: GameState) => void
 ) {
   const frameRef = useRef<number>();
-  const currentBackgroundImage = useRef<HTMLImageElement | null>(null); 
+  const currentBackgroundImage = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +29,7 @@ export function useGameLoop(
 
     const loadBackgroundImage = (imageUrl: string) => {
       if (currentBackgroundImage.current && currentBackgroundImage.current.src === imageUrl) {
-        return; 
+        return; // Already loaded
       }
       const image = new Image();
       image.src = imageUrl;
@@ -38,6 +38,17 @@ export function useGameLoop(
       };
     };
 
+    // Handle keyboard input
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowUp") {
+        gameState.dragon.y = Math.max(gameState.dragon.y - 10, 0); // Prevent moving out of bounds
+      } else if (event.key === "ArrowDown") {
+        gameState.dragon.y = Math.min(gameState.dragon.y + 10, canvas.height - gameState.dragon.height); // Prevent moving out of bounds
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     // Game loop
     const gameLoop = () => {
       let imageUrl = "";
@@ -45,15 +56,16 @@ export function useGameLoop(
       if (gameState.environment === "dragonpit") {
         imageUrl = "/Arena/Dragonpit (Fosso dos Dragões).jpg";
       } else if (gameState.environment === "valyria") {
-        imageUrl = "/Arena/Ancient Valyria (Valyria Antiga).jpg"; 
+        imageUrl = "/Arena/Ancient Valyria (Valyria Antiga).jpg";
       } else if (gameState.environment === "harrenhal") {
-        imageUrl = "/Arena/Harrenhal.jpg"; 
+        imageUrl = "/Arena/Harrenhal.jpg";
       } else {
-        imageUrl = "/Arena/default.jpg"; 
+        imageUrl = "/Arena/default.jpg";
       }
 
       loadBackgroundImage(imageUrl);
 
+      // Draw background
       if (currentBackgroundImage.current) {
         ctx.drawImage(currentBackgroundImage.current, 0, 0, canvas.width, canvas.height);
       }
@@ -75,7 +87,9 @@ export function useGameLoop(
       });
 
       // Draw dragon
-      gameState.dragon.draw(ctx);
+      ctx.save(); 
+      gameState.dragon.draw(ctx); 
+      ctx.restore(); 
 
       // Update game state
       setGameState(newState);
@@ -89,6 +103,7 @@ export function useGameLoop(
         cancelAnimationFrame(frameRef.current);
       }
       window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [canvasRef, gameState, setGameState]);
 }

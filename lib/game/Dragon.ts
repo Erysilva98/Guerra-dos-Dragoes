@@ -1,5 +1,5 @@
 export class Dragon {
-  x: number = 100;
+  x: number = 100; // Mantém fixo no eixo X
   y: number = 300;
   width: number = 120;
   height: number = 80;
@@ -37,8 +37,8 @@ export class Dragon {
     this.y = Math.max(0, this.y - this.speed);
   }
 
-  moveDown() {
-    this.y = Math.min(window.innerHeight - this.height, this.y + this.speed);
+  moveDown(canvasHeight: number) {
+    this.y = Math.min(canvasHeight - this.height, this.y + this.speed);
   }
 
   shoot() {
