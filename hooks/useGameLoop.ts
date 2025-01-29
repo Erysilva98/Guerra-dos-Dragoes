@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { GameState } from "@/lib/game/types";
-import { Enemy } from "@/lib/game/Enemy";
+import { Fireball } from "@/lib/game/Fireball"; 
+import { Enemy } from "@/lib/game/Enemy"; 
 
 export function useGameLoop(
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -42,7 +43,7 @@ export function useGameLoop(
         gameState.dragon.y = Math.max(gameState.dragon.y - 10, 0); 
       } else if (event.key === "ArrowDown") {
         gameState.dragon.y = Math.min(gameState.dragon.y + 10, canvas.height - gameState.dragon.height); 
-      } else if (event.key === " " || event.key === "Spacebar") {
+      } else if (event.key === " ") {
         gameState.dragon.shoot(gameState.projectiles); 
       }
     };
@@ -73,34 +74,52 @@ export function useGameLoop(
       // Update game state
       const newState = { ...gameState };
 
-      // Spawn enemies
+      // Spawn enemies (bola de gelo)
       if (Math.random() < 0.02) {
         const y = Math.random() * (canvas.height - 50);
         newState.enemies.push(new Enemy(canvas.width, y));
       }
 
-      // Update enemies
+      // Atualizar e desenhar inimigos (bola de gelo)
       newState.enemies = newState.enemies.filter((enemy) => {
         enemy.update();
+
+        gameState.projectiles.forEach((fireball, index) => {
+          if (
+            fireball.x < enemy.x + enemy.width &&
+            fireball.x + fireball.width > enemy.x &&
+            fireball.y < enemy.y + enemy.height &&
+            fireball.y + fireball.height > enemy.y
+          ) {
+            newState.enemies.splice(newState.enemies.indexOf(enemy), 1); 
+            gameState.projectiles.splice(index, 1); 
+            newState.score += 10; 
+          }
+        });
+
         enemy.draw(ctx);
         return enemy.x > -enemy.width;
       });
 
-      // Update projectiles (fireballs)
-      newState.projectiles.forEach((fireball) => {
-        fireball.update(); 
-        fireball.draw(ctx); 
-      });
-
-      newState.projectiles = newState.projectiles.filter((fireball) => fireball.x < canvas.width);
-
-      // Draw dragon
+      // Desenhar o dragão
       ctx.save();
       gameState.dragon.draw(ctx);
       ctx.restore();
 
-      // Update game state
+      // Desenhar projéteis (bolas de fogo)
+      gameState.projectiles.forEach((fireball) => {
+        fireball.update();
+        fireball.draw(ctx);
+      });
+
+      // Atualizar o estado do jogo
       setGameState(newState);
+
+      // Desenhar a pontuação na tela
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "20px Arial";
+      ctx.fillText(`Pontuação: ${gameState.score}`, 30, 90); 
+      
       frameRef.current = requestAnimationFrame(gameLoop);
     };
 
