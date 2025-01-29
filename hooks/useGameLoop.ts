@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 import { GameState } from "@/lib/game/types";
 import { Enemy } from "@/lib/game/Enemy";
@@ -41,9 +39,11 @@ export function useGameLoop(
     // Handle keyboard input
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowUp") {
-        gameState.dragon.y = Math.max(gameState.dragon.y - 10, 0); // Prevent moving out of bounds
+        gameState.dragon.y = Math.max(gameState.dragon.y - 10, 0); 
       } else if (event.key === "ArrowDown") {
-        gameState.dragon.y = Math.min(gameState.dragon.y + 10, canvas.height - gameState.dragon.height); // Prevent moving out of bounds
+        gameState.dragon.y = Math.min(gameState.dragon.y + 10, canvas.height - gameState.dragon.height); 
+      } else if (event.key === " " || event.key === "Spacebar") {
+        gameState.dragon.shoot(gameState.projectiles); 
       }
     };
 
@@ -86,10 +86,18 @@ export function useGameLoop(
         return enemy.x > -enemy.width;
       });
 
+      // Update projectiles (fireballs)
+      newState.projectiles.forEach((fireball) => {
+        fireball.update(); 
+        fireball.draw(ctx); 
+      });
+
+      newState.projectiles = newState.projectiles.filter((fireball) => fireball.x < canvas.width);
+
       // Draw dragon
-      ctx.save(); 
-      gameState.dragon.draw(ctx); 
-      ctx.restore(); 
+      ctx.save();
+      gameState.dragon.draw(ctx);
+      ctx.restore();
 
       // Update game state
       setGameState(newState);

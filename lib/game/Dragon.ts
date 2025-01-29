@@ -1,5 +1,7 @@
+import { Fireball } from "./Fireball";
+
 export class Dragon {
-  x: number = 100; // Mantém fixo no eixo X
+  x: number = 100;
   y: number = 300;
   width: number = 120;
   height: number = 80;
@@ -41,8 +43,9 @@ export class Dragon {
     this.y = Math.min(canvasHeight - this.height, this.y + this.speed);
   }
 
-  shoot() {
-    // Implementação do disparo de projétil (não alterado)
+  shoot(projectiles: Fireball[]) {
+    const fireball = new Fireball(this.x + this.width, this.y + this.height / 2); 
+    projectiles.push(fireball); 
   }
 
   draw(ctx: CanvasRenderingContext2D) {
