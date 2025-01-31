@@ -47,7 +47,7 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
 
     const gameLoop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas
-      drawBackground(); // Renderiza o background
+      drawBackground(); 
 
       gameState.dragon.draw(ctx); // Renderiza o dragão
 
