@@ -134,10 +134,6 @@ export function useGameLoop(
       ctx.fill();
 
       if (gameState.score >= 100) {
-        alert("Parabéns! Você venceu!");
-        setTimeout(() => {
-            location.reload(); 
-        }, 1);
         return;
       }
 
