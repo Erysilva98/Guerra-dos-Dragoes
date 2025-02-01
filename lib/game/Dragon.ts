@@ -5,7 +5,7 @@ export class Dragon {
   y: number = 300;
   width: number = 120;
   height: number = 80;
-  speed: number = 5;
+  speed: number = 10;
   type: string;
   image: HTMLImageElement | null;
 
