@@ -66,7 +66,8 @@ export function useGameLoop(
         ctx.drawImage(currentBackgroundImage.current, 0, 0, canvas.width, canvas.height);
       }
 
-      const newState = { ...gameState };
+      // Inicialize o score com 10 no estado
+      const newState = { ...gameState, score: gameState.score || 10 };
 
       if (Math.random() < 0.02) {
         const y = Math.random() * (canvas.height - 50);
@@ -86,13 +87,14 @@ export function useGameLoop(
           ) {
             newState.enemies.splice(newState.enemies.indexOf(enemy), 1);
             gameState.projectiles.splice(index, 1);
-            newState.score += 10;
+            newState.score += 10; // Aumentando o score quando um inimigo é destruído
             destroyed = true;
           }
         });
 
+        // Se o inimigo passar (não destruído e x <= 0), diminui o score
         if (!destroyed && enemy.x <= 0) {
-          newState.score = Math.max(0, newState.score - 1);
+          newState.score = Math.max(0, newState.score - 1); // Diminuindo o score quando um inimigo escapa
         }
 
         enemy.draw(ctx);
@@ -110,10 +112,10 @@ export function useGameLoop(
 
       setGameState(newState);
 
-      // progress bar
+      // Barra de progresso
       ctx.fillStyle = "#FFFFFF";
       ctx.font = "20px Arial";
-      ctx.fillText(`Pontuação: ${gameState.score}`, 30, 50); 
+      ctx.fillText(`Pontuação: ${newState.score}`, 30, 50); 
 
       ctx.fillStyle = "#000";
       ctx.beginPath();
@@ -127,13 +129,13 @@ export function useGameLoop(
       ctx.fillStyle = "#0f0";
       ctx.beginPath();
       ctx.moveTo(30, 65); 
-      ctx.arcTo(30 + gameState.score, 65, 30 + gameState.score, 70, 5); 
-      ctx.arcTo(30 + gameState.score, 70, 30, 70, 5);
+      ctx.arcTo(30 + newState.score, 65, 30 + newState.score, 70, 5); 
+      ctx.arcTo(30 + newState.score, 70, 30, 70, 5);
       ctx.arcTo(30, 70, 30, 65, 5); 
       ctx.closePath();
       ctx.fill();
 
-      if (gameState.score >= 100) {
+      if (newState.score >= 100) {
         return;
       }
 
