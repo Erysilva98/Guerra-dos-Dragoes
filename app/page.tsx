@@ -15,10 +15,14 @@ export default function Home() {
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [selectedDragonType, setSelectedDragonType] = useState<string | null>(null);
   const [showRules, setShowRules] = useState(false);
+  const [showNav, setShowNav] = useState(true); 
 
   useEffect(() => {
     if (activeSection === "game") {
+      setShowNav(false);
       setShowRules(true);
+    } else {
+      setShowNav(true); 
     }
   }, [activeSection]);
 
@@ -35,7 +39,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {showRules && <GameRulesModal onClose={() => setShowRules(false)} />}
-      <Navigation activeSection={activeSection} onNavigate={handleNavigate} />
+      {showNav && <Navigation activeSection={activeSection} onNavigate={handleNavigate} />}
       <div className="container mx-auto px-4 py-16">
         {activeSection === "home" && (
           <section className="text-center">

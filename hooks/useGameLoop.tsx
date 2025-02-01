@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { GameState } from "@/lib/game/types";
-import { Fireball } from "@/lib/game/Fireball";
 import { Enemy } from "@/lib/game/Enemy";
 
 export function useGameLoop(
@@ -44,7 +43,7 @@ export function useGameLoop(
       } else if (event.key === " ") {
         gameState.dragon.shoot(gameState.projectiles);
       } else if (event.key === "Escape") {
-        location.reload(); // Recarrega a página ao pressionar ESC
+        location.reload(); 
       }
     };
 
@@ -114,23 +113,23 @@ export function useGameLoop(
       // progress bar
       ctx.fillStyle = "#FFFFFF";
       ctx.font = "20px Arial";
-      ctx.fillText(`Pontuação: ${gameState.score}`, 30, 90);
+      ctx.fillText(`Pontuação: ${gameState.score}`, 30, 50); 
 
       ctx.fillStyle = "#000";
       ctx.beginPath();
-      ctx.moveTo(30, 115); 
-      ctx.arcTo(130, 115, 130, 120, 5); 
-      ctx.arcTo(130, 120, 30, 120, 5); 
-      ctx.arcTo(30, 120, 30, 115, 5); 
+      ctx.moveTo(30, 65);  
+      ctx.arcTo(130, 65, 130, 70, 5); 
+      ctx.arcTo(130, 70, 30, 70, 5); 
+      ctx.arcTo(30, 70, 30, 65, 5);  
       ctx.closePath();
       ctx.fill();
-      
+
       ctx.fillStyle = "#0f0";
       ctx.beginPath();
-      ctx.moveTo(30, 115); 
-      ctx.arcTo(30 + gameState.score, 115, 30 + gameState.score, 120, 5); 
-      ctx.arcTo(30 + gameState.score, 120, 30, 120, 5); 
-      ctx.arcTo(30, 120, 30, 115, 5);
+      ctx.moveTo(30, 65); 
+      ctx.arcTo(30 + gameState.score, 65, 30 + gameState.score, 70, 5); 
+      ctx.arcTo(30 + gameState.score, 70, 30, 70, 5);
+      ctx.arcTo(30, 70, 30, 65, 5); 
       ctx.closePath();
       ctx.fill();
 
