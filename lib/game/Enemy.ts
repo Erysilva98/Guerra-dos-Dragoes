@@ -4,10 +4,14 @@ export class Enemy {
   width: number = 50;
   height: number = 50;
   speed: number = 3;
+  image: HTMLImageElement; 
 
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
+
+    this.image = new Image();
+    this.image.src = "/Arena/bola-de-fogo.png"; 
   }
 
   update() {
@@ -15,7 +19,11 @@ export class Enemy {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = "#FF0000";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    if (this.image.complete) {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height); 
+    } else {
+      ctx.fillStyle = "blue"; 
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
   }
 }
