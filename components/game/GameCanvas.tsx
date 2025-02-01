@@ -36,7 +36,10 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
   return (
     <>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} />
-      <VictoryModal isOpen={isGameOver} onClose={() => location.reload()} />
+      <VictoryModal 
+        isOpen={isGameOver} 
+        onClose={() => setTimeout(() => location.reload(), 1000)} 
+      />
     </>
   );
 }
