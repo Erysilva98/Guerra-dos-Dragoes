@@ -43,6 +43,8 @@ export function useGameLoop(
         gameState.dragon.y = Math.min(gameState.dragon.y + 10, canvas.height - gameState.dragon.height);
       } else if (event.key === " ") {
         gameState.dragon.shoot(gameState.projectiles);
+      } else if (event.key === "Escape") {
+        location.reload(); // Recarrega a página ao pressionar ESC
       }
     };
 
