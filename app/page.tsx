@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { Flame, ChevronRight, ChevronLeft } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import CharacterCard from "@/components/CharacterCard";
@@ -8,12 +8,19 @@ import StoryCard from "@/components/StoryCard";
 import ChapterCard from "@/components/ChapterCard";
 import { characters, chapters, stories } from "@/lib/data";
 import GameCanvas from "@/components/game/GameCanvas";
-
+import GameRulesModal from "@/components/GameRulesModal";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [selectedDragonType, setSelectedDragonType] = useState<string | null>(null);
+  const [showRules, setShowRules] = useState(false);
+
+  useEffect(() => {
+    if (activeSection === "game") {
+      setShowRules(true);
+    }
+  }, [activeSection]);
 
   const handleNavigate = (section: SetStateAction<string>) => {
     setActiveSection(section);
@@ -21,14 +28,14 @@ export default function Home() {
 
   const handlePlayChapter = (chapterId: string) => {
     setSelectedChapter(chapterId);
-    setActiveSection("game"); 
     setSelectedDragonType(chapterId);
+    setActiveSection("game");
   };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      {showRules && <GameRulesModal onClose={() => setShowRules(false)} />}
       <Navigation activeSection={activeSection} onNavigate={handleNavigate} />
-      
       <div className="container mx-auto px-4 py-16">
         {activeSection === "home" && (
           <section className="text-center">
@@ -55,7 +62,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
         {activeSection === "chapters" && (
           <section>
             <h2 className="text-4xl font-bold mb-8 text-center text-amber-500">Escolha um Capítulo</h2>
@@ -64,10 +70,9 @@ export default function Home() {
                 <ChapterCard
                   key={chapter.id}
                   {...chapter}
-                  onPlay={() => handlePlayChapter(chapter.id)} // Passando a função onPlay
+                  onPlay={() => handlePlayChapter(chapter.id)}
                 />
               ))}
-
             </div>
             <div className="text-center mt-8">
               <button
@@ -83,7 +88,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
         {activeSection === "characters" && (
           <section>
             <h2 className="text-4xl font-bold mb-8 text-center text-amber-500">Dragões Lendários</h2>
@@ -94,7 +98,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
         {activeSection === "story" && (
           <section>
             <h2 className="text-4xl font-bold mb-8 text-center text-amber-500">Saga dos Dragões</h2>
@@ -105,8 +108,7 @@ export default function Home() {
             </div>
           </section>
         )}
-
-        {activeSection === "game" && selectedDragonType && (
+        {activeSection === "game" && selectedDragonType && !showRules && (
           <GameCanvas dragonType={selectedDragonType} />
         )}
       </div>
