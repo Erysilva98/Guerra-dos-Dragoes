@@ -1,11 +1,10 @@
-"use client"; 
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useGameLoop } from "@/hooks/useGameLoop";
 import { Dragon } from "@/lib/game/Dragon";
 import { GameState } from "@/lib/game/types";
-import VictoryModal from "@/components/VictoryModal";
-import GameOverModal from "@/components/GameOverModal";
+import GameResultModal from "@/components/GameResultModal";
 
 interface GameCanvasProps {
   dragonType: string;
@@ -52,18 +51,28 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
     });
   };
 
+  const modalText = isVictory
+    ? {
+        title: "🎉 Parabéns! 🎉",
+        message: "🔥 Seu dragão dominou os céus! O reino está salvo!",
+        buttonLabel: "Jogar Novamente",
+      }
+    : isGameOver
+    ? {
+        title: "🔥 Game Over! 🔥",
+        message: "⚔️ Seu dragão caiu em batalha! Tente novamente.",
+        buttonLabel: "Tentar Novamente",
+      }
+    : { title: "", message: "", buttonLabel: "" };
+
   return (
     <>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} />
-      <VictoryModal 
-        isOpen={isVictory} 
+      <GameResultModal 
+        isOpen={isVictory || isGameOver} 
         onClose={() => setTimeout(() => location.reload(), 1)} 
         onRestart={restartGame}
-      />
-      <GameOverModal 
-        isOpen={isGameOver} 
-        onClose={() => setTimeout(() => location.reload(), 1)} 
-        onRestart={restartGame}
+        modalText={modalText}
       />
     </>
   );
