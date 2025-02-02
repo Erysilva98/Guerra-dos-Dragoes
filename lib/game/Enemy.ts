@@ -3,7 +3,7 @@ export class Enemy {
   y: number;
   width: number = 50;
   height: number = 50;
-  speed: number = 5;
+  speed: number = 3;
   image: HTMLImageElement; 
 
   constructor(x: number, y: number) {
