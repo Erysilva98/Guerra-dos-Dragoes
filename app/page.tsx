@@ -1,3 +1,4 @@
+
 "use client";
 
 import { SetStateAction, useState, useEffect } from "react";
@@ -43,11 +44,11 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         {activeSection === "home" && (
           <section className="text-center">
-            <div className="relative mb-12">
+            <div className="relative mb-12 pt-24"> 
               <div className="absolute inset-0 flex items-center justify-center blur-3xl opacity-20">
                 <Flame className="w-96 h-96 text-red-500" />
               </div>
-              <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-red-500 to-amber-500 text-transparent bg-clip-text">
+              <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-red-500 to-amber-500 text-transparent bg-clip-text px-4 py-2">
                 Bem-vindo ao Reino dos Dragões
               </h1>
               <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
