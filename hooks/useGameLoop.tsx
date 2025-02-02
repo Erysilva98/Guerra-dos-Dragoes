@@ -66,8 +66,7 @@ export function useGameLoop(
         ctx.drawImage(currentBackgroundImage.current, 0, 0, canvas.width, canvas.height);
       }
 
-      // Inicialize o score com 10 no estado
-      const newState = { ...gameState, score: gameState.score || 10 };
+      const newState = { ...gameState, score: gameState.score || 50 };
 
       if (Math.random() < 0.02) {
         const y = Math.random() * (canvas.height - 50);
@@ -87,14 +86,13 @@ export function useGameLoop(
           ) {
             newState.enemies.splice(newState.enemies.indexOf(enemy), 1);
             gameState.projectiles.splice(index, 1);
-            newState.score += 10; // Aumentando o score quando um inimigo é destruído
+            newState.score += 10;
             destroyed = true;
           }
         });
 
-        // Se o inimigo passar (não destruído e x <= 0), diminui o score
         if (!destroyed && enemy.x <= 0) {
-          newState.score = Math.max(0, newState.score - 1); // Diminuindo o score quando um inimigo escapa
+          newState.score = Math.max(0, newState.score - 1); 
         }
 
         enemy.draw(ctx);
@@ -112,7 +110,7 @@ export function useGameLoop(
 
       setGameState(newState);
 
-      // Barra de progresso
+      // Progress bar
       ctx.fillStyle = "#FFFFFF";
       ctx.font = "20px Arial";
       ctx.fillText(`Pontuação: ${newState.score}`, 30, 50); 
