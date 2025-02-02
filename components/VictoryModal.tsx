@@ -3,9 +3,10 @@
 interface VictoryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onRestart: () => void;
 }
 
-export default function VictoryModal({ isOpen, onClose }: VictoryModalProps) {
+export default function VictoryModal({ isOpen, onClose, onRestart }: VictoryModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -15,13 +16,23 @@ export default function VictoryModal({ isOpen, onClose }: VictoryModalProps) {
           🎉 Parabéns! 🎉
         </h2>
         <p className="text-gray-300 mb-4">Você venceu o jogo!</p>
-        <button
-          onClick={onClose}
-          className="group relative px-6 py-3 bg-gradient-to-r from-red-700 to-amber-700 rounded-lg text-xl font-bold transition-all hover:scale-105"
-        >
-          <span className="relative z-10">OK</span>
-          <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-amber-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-        </button>
+        <div className="flex flex-col space-y-4">
+          <button
+            onClick={onRestart}
+            className="group relative px-6 py-3 bg-gradient-to-r from-red-700 to-amber-700 rounded-lg text-xl font-bold transition-all hover:scale-105"
+          >
+            <span className="relative z-10">Jogar Novamente</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-amber-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+          
+          <button
+            onClick={onClose}
+            className="group relative px-6 py-3 bg-gradient-to-r from-green-700 to-amber-700 rounded-lg text-xl font-bold transition-all hover:scale-105"
+          >
+            <span className="relative z-10">Sair</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-amber-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+        </div>
       </div>
     </div>
   );
