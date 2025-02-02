@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGameLoop } from "@/hooks/useGameLoop";
 import { Dragon } from "@/lib/game/Dragon";
 import { GameState } from "@/lib/game/types";
-import { chapters } from "@/lib/data";
+import GameResultModal from "@/components/GameResultModal";
 
 interface GameCanvasProps {
   dragonType: string;
@@ -12,6 +12,9 @@ interface GameCanvasProps {
 
 export default function GameCanvas({ dragonType }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isVictory, setIsVictory] = useState(false);
+
   const [gameState, setGameState] = useState<GameState>({
     dragon: new Dragon(dragonType),
     enemies: [],
@@ -20,48 +23,57 @@ export default function GameCanvas({ dragonType }: GameCanvasProps) {
     health: 100,
     shield: 50,
     stamina: 100,
-    environment: dragonType, // Adiciona o tipo do capítulo como parte do ambiente
+    environment: dragonType,
   });
 
-  useGameLoop(canvasRef, gameState, setGameState);
+  useGameLoop(canvasRef, gameState, (newState) => {
+    setGameState(newState);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (newState.score >= 100) {
+      setIsVictory(true);
+    } else if (newState.score === 0) {
+      setIsGameOver(true); 
+    }
+  });
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  const restartGame = () => {
+    setIsGameOver(false);
+    setIsVictory(false);
+    setGameState({
+      dragon: new Dragon(dragonType),
+      enemies: [],
+      projectiles: [],
+      score: 0,
+      health: 100,
+      shield: 50,
+      stamina: 100,
+      environment: dragonType,
+    });
+  };
 
-    const drawBackground = () => {
-      if (gameState.environment === "dragonpit") {
-        ctx.fillStyle = "#3a3a3a"; // Cinza para ruínas
-      } else if (gameState.environment === "valyria") {
-        ctx.fillStyle = "#FF6347"; // Vermelho para lava
-      } else if (gameState.environment === "harrenhal") {
-        ctx.fillStyle = "#1a1a1a"; // Preto para tempestade
-      } else {
-        ctx.fillStyle = "#1a1a1a"; // Cor padrão
+  const modalText = isVictory
+    ? {
+        title: "🎉 Parabéns! 🎉",
+        message: "🔥 Seu dragão dominou os céus! O reino está salvo!",
+        buttonLabel: "Jogar Novamente",
       }
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
-
-    const gameLoop = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas
-      drawBackground(); // Renderiza o background
-
-      gameState.dragon.draw(ctx); // Renderiza o dragão
-
-      requestAnimationFrame(gameLoop); // Loop do jogo
-    };
-
-    // requestAnimationFrame(gameLoop);
-  }, [gameState]);
+    : isGameOver
+    ? {
+        title: "🔥 Game Over! 🔥",
+        message: "⚔️ Seu dragão caiu em batalha! Tente novamente.",
+        buttonLabel: "Tentar Novamente",
+      }
+    : { title: "", message: "", buttonLabel: "" };
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{ imageRendering: "pixelated" }}
-    />
+    <>
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} />
+      <GameResultModal 
+        isOpen={isVictory || isGameOver} 
+        onClose={() => setTimeout(() => location.reload(), 1)} 
+        onRestart={restartGame}
+        modalText={modalText}
+      />
+    </>
   );
 }
