@@ -23,7 +23,7 @@ export const characters = [
     id: "caraxes",
     name: "Caraxes",
     description: "O Wyrm de Sangue, conhecido por sua agilidade e natureza feroz. Montado pelo Príncipe Daemon Targaryen.",
-    image: "/DRagon/Caraxes, O Sanguinário.jpg",
+    image: "/Dragon/Caraxes, O Sanguinário.jpg",
     stats: {
       power: 85,
       speed: 95,
