@@ -12,9 +12,9 @@ export interface DragonData {
 }
 
 export interface GameState {
-  dragon: any; // Will be properly typed with Dragon class
-  enemies: any[]; // Will be properly typed with Enemy class
-  projectiles: any[]; // Will be properly typed with Projectile class
+  dragon: any; 
+  enemies: any[]; 
+  projectiles: any[];
   score: number;
   health: number;
   shield: number;
